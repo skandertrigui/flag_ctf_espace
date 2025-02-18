@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flag_image</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+        }
+        .image-container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .image-part {
+            width: 33.33%;
+            height: 33.33%;
+            background: url('flag_image_sk.jpg'); /* S'assurer que ce chemin est correct */
+            background-size: 600px 400px;
+            filter: blur(10px);
+        }
+        .visible {
+            filter: blur(0px) !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Défloutez l'image en répondant aux questions !</h1>
+    <div class="image-container" id="imageGrid"></div>
+    <div id="question-container">
+        <p id="question-text"></p>
+        <input type="text" id="answer" placeholder="Votre réponse">
+        <button onclick="checkAnswer()">Valider</button>
+    </div>
+    <script>
+        let questions = [
+            { q: "Je suis une zone d'ombre dans l'univers, mais je ne suis ni un trou noir, ni une étoile. Parfois invisible, je fais disparaître toute lumière, et je suis souvent trouvée dans les interstices de l'espace. Qui suis-je ? (1 mot)", a: "Nebula" },
+            { q: "Plus je m’éloigne, plus je deviens difficile à voir, mais pourtant, je suis à l’origine de la lumière qui éclaire l'univers. Je ne suis ni une étoile, ni une planète. Qui suis-je ? (1 mot)", a: "Quasar" },
+            { q: "Je suis une force invisible, toujours présente, mais je suis souvent ignorée. Je modifie le cours des astres et garde l'univers ensemble. Qui suis-je ? (1 mot)", a: "Gravité" },
+            { q: "Je n’ai pas de forme fixe, je peux être chaud ou froid, mais je suis toujours là, partout dans l'univers. Je n’ai ni début, ni fin. Qui suis-je ? (1 mot)", a: "Éther" },
+            { q: "Je suis une étoile morte, mais mon héritage laisse des traces lumineuses. Mon cœur est un trou noir, et mon manteau est une explosion. Qui suis-je ? (1 mot)", a: "Supernova" },
+            { q: "J'étais une théorie, maintenant je suis une réalité. J'ai été observé dans des galaxies lointaines, et ma vitesse défie le temps. Qui suis-je ? (1 mot)", a: "Expansion" }
+        ];
+        let currentQuestion = 0;
+        let imageParts = [];
+
+        function initImage() {
+            let container = document.getElementById('imageGrid');
+            for (let i = 0; i < 6; i++) {
+                let div = document.createElement('div');
+                div.classList.add('image-part');
+                div.style.backgroundPosition = `${(i % 3) * -200}px ${Math.floor(i / 3) * -200}px`;
+                imageParts.push(div);
+                container.appendChild(div);
+            }
+            document.getElementById("question-text").innerText = questions[currentQuestion].q;
+        }
+
+        function checkAnswer() {
+            let answer = document.getElementById("answer").value.trim();
+            if (answer.toLowerCase() === questions[currentQuestion].a.toLowerCase() && currentQuestion < 6) {
+                imageParts[currentQuestion].classList.add('visible');
+                currentQuestion++;
+                if (currentQuestion < 6) {
+                    document.getElementById("question-text").innerText = questions[currentQuestion].q;
+                } else {
+                    document.getElementById("question-container").innerHTML = "<p>Bravo ! Vous avez découvert l'image !</p>";
+                }
+            }
+        }
+        
+        document.addEventListener("contextmenu", event => event.preventDefault());
+        document.addEventListener("keydown", event => {
+            if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
+                event.preventDefault();
+            }
+        });
+        
+        // Initialisation des blocs d'image floutés
+        window.onload = initImage;
+    </script>
+</body>
+</html>
